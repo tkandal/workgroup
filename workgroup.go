@@ -18,12 +18,11 @@ func NewWorkGroup(n int) *WorkGroup {
 		waitg: &sync.WaitGroup{},
 	}
 
-	wg.waitg.Add(n)
 	for i := 0; i < n; i++ {
 		go func() {
-			defer wg.waitg.Done()
 			for f := range wg.main {
 				f()
+				wg.waitg.Done()
 			}
 		}()
 	}
@@ -34,11 +33,12 @@ func NewWorkGroup(n int) *WorkGroup {
 
 // Add adds a new worker function to execute.
 func (wg *WorkGroup) Add(f func()) {
+	wg.waitg.Add(1)
 	wg.main <- f
 }
 
 // Wait waits until all worker function are finished.
 func (wg *WorkGroup) Wait() {
-	close(wg.main)
 	wg.waitg.Wait()
+	close(wg.main)
 }
