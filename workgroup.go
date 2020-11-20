@@ -12,7 +12,6 @@ type WorkGroup struct {
 
 // NewWorkGroup allocates and returns a new WorkGroup.
 func NewWorkGroup(n int) *WorkGroup {
-
 	wg := &WorkGroup{
 		main:  make(chan func()),
 		waitg: &sync.WaitGroup{},
@@ -26,9 +25,7 @@ func NewWorkGroup(n int) *WorkGroup {
 			}
 		}()
 	}
-
 	return wg
-
 }
 
 // Add adds a new worker function to execute.
